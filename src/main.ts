@@ -3,8 +3,8 @@ import './style.css';
 import Vector from './vector';
 
 const CANVAS_CONFIG = {
-    WIDTH: 520,
-    HEIGHT: 500,
+    WIDTH: 720,
+    HEIGHT: 700,
 };
 
 const SECOND = 1_000;
@@ -33,28 +33,45 @@ const lines: Line[] = [];
 const CONTAINER_RADIUS = 250;
 const CONTAINER_CENTER = new Vector(250, 250);
 
-const CIRCLE_CONTAINER = NewCircle(CONTAINER_CENTER,CONTAINER_RADIUS, canvasCtx)
+const CIRCLE_CONTAINER = NewCircle(
+    CONTAINER_CENTER,
+    CONTAINER_RADIUS,
+    canvasCtx
+);
 
-setInterval(() => {
+const interval = setInterval(() => {
     clearCanvas();
 
-    if(ball.position.norm(CONTAINER_CENTER) >= CONTAINER_RADIUS){
-        lines.push(NewLine(ball.position, ball.position, canvasCtx));
+    if (ball.position.norm(CONTAINER_CENTER) >= CONTAINER_RADIUS) {
+        //lines.push(NewLine(ball.position, ball.position, canvasCtx));
 
         //calculate velocity components
-        let center_to_ball = ball.position.minus(CONTAINER_CENTER) // (center - ball_position)
-        let normal = new Vector(-center_to_ball.x, center_to_ball.y)
+        let center_to_ball = ball.position.minus(CONTAINER_CENTER);
+        let normal = new Vector(-center_to_ball.y,center_to_ball.x);
+        $counter.innerHTML = `${normal.dot(center_to_ball)}`;
 
-        let tangencial = velocity.projectedOnto(normal)
-        let radial = velocity.projectedOnto(center_to_ball).scalarProduct(-1)
+        let tangencial = velocity.projectedOnto(normal);
+        let radial = velocity.projectedOnto(center_to_ball).scalarProduct(-1);
 
-        velocity = tangencial.add(radial)
+        velocity = tangencial.add(radial);
+
+        const normal_line = NewLine(ball.position,ball.position.add(normal),canvasCtx,1,'#0000ff')
+        const radial_line = NewLine(
+            CONTAINER_CENTER,
+            ball.position,
+            canvasCtx,
+            1,
+            '#ff0000'
+        );
+        radial_line.draw();
+        normal_line.draw();
+        
+        clearInterval(interval);
 
         //tangencial component
-
     }
 
-    $counter.innerHTML = `${lines.length}`;
+    //$counter.innerHTML = `${lines.length}`;
     ball.position = ball.position.add(velocity);
 
     if (lines) {
@@ -63,7 +80,7 @@ setInterval(() => {
         });
     }
 
-    CIRCLE_CONTAINER.draw()
+    CIRCLE_CONTAINER.draw();
     ball.draw();
 
     if (lines) {
@@ -71,8 +88,6 @@ setInterval(() => {
             line.draw();
         });
     }
-
-
 }, 0.03 * SECOND);
 
 // square container
