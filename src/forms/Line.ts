@@ -22,7 +22,7 @@ export class Line extends Form {
     public end: Vector;
     public width: number;
     public ctx: CanvasRenderingContext2D;
-    public color: string;
+    public lineColor: string;
     constructor(
         start: Vector,
         end: Vector,
@@ -35,7 +35,7 @@ export class Line extends Form {
         this.end = end;
         this.width = width;
         this.ctx = canvasCtx;
-        this.color = color;
+        this.lineColor = color;
     }
 
     draw() {
@@ -43,7 +43,7 @@ export class Line extends Form {
         this.ctx.moveTo(this.start.x, this.start.y);
         this.ctx.lineTo(this.end.x, this.end.y);
         this.ctx.lineWidth = this.width;
-        this.ctx.strokeStyle = this.color;
+        this.ctx.strokeStyle = this.lineColor;
         this.ctx.stroke();
     }
 }
