@@ -9,8 +9,8 @@ export default class Vector {
     add(other: Vector): Vector {
         return new Vector(this.x + other.x, this.y + other.y);
     }
-    
-    minus(other: Vector){
+
+    minus(other: Vector): Vector {
         return new Vector(this.x - other.x, this.y - other.y);
     }
 
@@ -18,7 +18,7 @@ export default class Vector {
         return new Vector(this.x * scalar, this.y * scalar);
     }
 
-    dot(other: Vector) {
+    dot(other: Vector): number {
         return this.x * other.x + this.y * other.y;
     }
 
@@ -37,8 +37,8 @@ export default class Vector {
         return Math.sqrt(this.x ** 2 + this.y ** 2);
     }
 
-    projectedOnto(other: Vector){
-        let sc = this.dot(other) / other.dot(other)
-        return other.scalarProduct(sc)
+    projectedOnto(other: Vector): Vector {
+        let sc = this.dot(other) / other.dot(other);
+        return other.scalarProduct(sc);
     }
 }
