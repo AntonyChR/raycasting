@@ -1,123 +1,89 @@
-import { Line, NewCircle, NewLine } from './forms';
 import './style.css';
-import Vector from './vector';
 
-const CANVAS_CONFIG = {
-    WIDTH: 720,
-    HEIGHT: 700,
+import { createCanvas } from './canvas';
+import { Line, NewLine } from './forms/Line';
+import { newSquare } from './forms/Square';
+
+const canvas = createCanvas();
+const canvasCtx = canvas.getContext('2d');
+
+type Matrix = number[][]
+
+const makeMatrix = (rows: number, cols: number) => {
+    let matrix: Matrix = [];
+    for (let i = 0; i < rows; i++) {
+        const row = [];
+        for (let j = 0; j < cols; j++) {
+            row.push(0);
+        }
+        matrix.push(row);
+    }
+    return matrix;
 };
 
-const SECOND = 1_000;
+const createGrid = (
+    matrix: Matrix,
+    width: number = 10,
+    height: number = 10
+) => {
+    const hLines = matrix.length + 1;
+    const vLines = matrix[0].length + 1;
 
-const $canvas = document.createElement('canvas');
-$canvas.width = CANVAS_CONFIG.WIDTH;
-$canvas.height = CANVAS_CONFIG.HEIGHT;
+    const grid: Line[] = [];
 
-document.querySelector<HTMLDivElement>('#app')!.appendChild($canvas);
-const $counter = document.querySelector('#count')!;
+    for (let i = 0; i < hLines; i++) {
+        const start = {
+            x: 0,
+            y: i * width,
+        };
 
-const canvasCtx = $canvas.getContext('2d')!;
+        const end = {
+            x: (vLines - 1) * height,
+            y: i * width,
+        };
+        grid.push(NewLine(start, end, canvasCtx!));
+    }
 
-const clearCanvas = () => {
-    canvasCtx.clearRect(0, 0, CANVAS_CONFIG.WIDTH, CANVAS_CONFIG.HEIGHT);
+    for (let i = 0; i < vLines; i++) {
+        const start = {
+            x: i * height,
+            y: 0,
+        };
+        const end = {
+            x: i * height,
+            y: width * (hLines - 1),
+        };
+        grid.push(NewLine(start, end, canvasCtx!));
+    }
+
+    return {
+        lines: grid,
+        draw: () => {
+            grid.forEach((l) => l.draw());
+        },
+    };
 };
 
-const ball = NewCircle({ x: 100, y: 80 }, 20, canvasCtx);
-let velocity = new Vector(
-    Math.floor(Math.random() * 10 + 5),
-    Math.floor(Math.random() * 10 + 5)
-);
-const lines: Line[] = [];
 
-// circle container
-const CONTAINER_RADIUS = 250;
-const CONTAINER_CENTER = new Vector(250, 250);
+const m = makeMatrix(5, 5);
 
-const CIRCLE_CONTAINER = NewCircle(
-    CONTAINER_CENTER,
-    CONTAINER_RADIUS,
-    canvasCtx
-);
+const grid = createGrid(m, 20, 20);
+console.log(m)
+grid.draw();
 
-const interval = setInterval(() => {
-    clearCanvas();
 
-    if (ball.position.norm(CONTAINER_CENTER) >= CONTAINER_RADIUS) {
-        //lines.push(NewLine(ball.position, ball.position, canvasCtx));
+canvas.addEventListener('click',(event:MouseEvent)=>{
+    const rect = canvas.getBoundingClientRect()
+    const top = rect.top + window.scrollY
+    const left = rect.left + window.scrollX
 
-        //calculate velocity components
-        let center_to_ball = ball.position.minus(CONTAINER_CENTER);
-        let normal = new Vector(-center_to_ball.y,center_to_ball.x);
-        $counter.innerHTML = `${normal.dot(center_to_ball)}`;
+    const i = Math.floor((event.clientY - top) / 20)
+    const j = Math.floor((event.clientX - left) / 20)
 
-        let tangencial = velocity.projectedOnto(normal);
-        let radial = velocity.projectedOnto(center_to_ball).scalarProduct(-1);
+    m[i][j] = 1;
+    console.log(m)
 
-        velocity = tangencial.add(radial);
+})
 
-        const normal_line = NewLine(ball.position,ball.position.add(normal),canvasCtx,1,'#0000ff')
-        const radial_line = NewLine(
-            CONTAINER_CENTER,
-            ball.position,
-            canvasCtx,
-            1,
-            '#ff0000'
-        );
-        radial_line.draw();
-        normal_line.draw();
-        
-        clearInterval(interval);
 
-        //tangencial component
-    }
 
-    //$counter.innerHTML = `${lines.length}`;
-    ball.position = ball.position.add(velocity);
-
-    if (lines) {
-        lines.forEach((line) => {
-            line.end = ball.position;
-        });
-    }
-
-    CIRCLE_CONTAINER.draw();
-    ball.draw();
-
-    if (lines) {
-        lines.forEach((line) => {
-            line.draw();
-        });
-    }
-}, 0.03 * SECOND);
-
-// square container
-// setInterval(() => {
-//     clearCanvas();
-
-//     if (ball.position.x >= CANVAS_CONFIG.WIDTH || ball.position.x <= 0) {
-//         lines.push(NewLine(ball.position, ball.position, canvasCtx));
-//         velocity.x *= -1;
-//     }
-
-//     if (ball.position.y >= CANVAS_CONFIG.HEIGHT || ball.position.y <= 0) {
-//         lines.push(NewLine(ball.position, ball.position, canvasCtx));
-//         velocity.y *= -1;
-//     }
-
-//     $counter.innerHTML = `${lines.length}`;
-//     ball.position = ball.position.add(velocity);
-
-//     if (lines) {
-//         lines.forEach((line) => {
-//             line.end = ball.position;
-//         });
-//     }
-
-//     ball.draw();
-
-//     if (lines) {
-//         lines.forEach((line) => {
-//             line.draw();
-//         });
-//     }
-// }, 0.03 * SECOND);
