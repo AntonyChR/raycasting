@@ -7,7 +7,7 @@ import { newSquare } from './forms/Square';
 const canvas = createCanvas();
 const canvasCtx = canvas.getContext('2d');
 
-type Matrix = number[][]
+type Matrix = number[][];
 
 const makeMatrix = (rows: number, cols: number) => {
     let matrix: Matrix = [];
@@ -19,6 +19,9 @@ const makeMatrix = (rows: number, cols: number) => {
         matrix.push(row);
     }
     return matrix;
+};
+const clearCanvas = () => {
+    canvasCtx!.clearRect(0, 0, 500, 500);
 };
 
 const createGrid = (
@@ -64,26 +67,61 @@ const createGrid = (
     };
 };
 
+function drawMatrixState(m: Matrix) {
+    m.forEach((r, i) => {
+        r.forEach((_, j) => {
+            if (m[i][j] === 1) {
+                const sq = newSquare(
+                    { x: j * 20, y: i * 20 },
+                    20,
+                    20,
+                    canvasCtx!,
+                    1,
+                    'red',
+                    'green'
+                );
+                sq.draw();
+            }
+        });
+    });
+}
 
-const m = makeMatrix(5, 5);
+let m = makeMatrix(10, 10);
 
 const grid = createGrid(m, 20, 20);
-console.log(m)
 grid.draw();
 
+canvas.addEventListener('click', (event: MouseEvent) => {
+    const rect = canvas.getBoundingClientRect();
+    const top = rect.top + window.scrollY;
+    const left = rect.left + window.scrollX;
 
-canvas.addEventListener('click',(event:MouseEvent)=>{
-    const rect = canvas.getBoundingClientRect()
-    const top = rect.top + window.scrollY
-    const left = rect.left + window.scrollX
-
-    const i = Math.floor((event.clientY - top) / 20)
-    const j = Math.floor((event.clientX - left) / 20)
-
+    const i = Math.floor((event.clientY - top) / 20);
+    const j = Math.floor((event.clientX - left) / 20);
     m[i][j] = 1;
-    console.log(m)
+});
 
-})
+const SECOND = 1_000;
 
+setInterval(() => {
+    clearCanvas();
+    drawMatrixState(m);
+    grid.draw();
+    let matrixCopy = structuredClone(m);
+    for (let i = 0; i < m.length; i++) {
+        for (let j = 0; j < m[0].length; j++) {
+            if (i < m.length - 1) {
+                matrixCopy[i + 1][j] = m[i][j];
+            }
+            if (i > 0) {
+                matrixCopy[i][j] = m[i - 1][j];
+            }
+            if (i == 0) {
+                matrixCopy[i][j] = 0;
+            }
+        }
+    }
 
-
+    m = matrixCopy;
+    console.log(m);
+}, 0.09* SECOND);
