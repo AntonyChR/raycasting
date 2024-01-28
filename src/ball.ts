@@ -44,7 +44,7 @@ const CIRCLE_CONTAINER = NewCircle(
 // }
 // const externalLines: P[] = [];
 
-const randomRGB = (): string => {
+export const randomRGB = (): string => {
     const R = Math.floor(Math.random() * 256);
     const G = Math.floor(Math.random() * 256);
     const B = Math.floor(Math.random() * 256);

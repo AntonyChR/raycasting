@@ -77,7 +77,7 @@ function drawMatrixState(m: Matrix) {
                     20,
                     canvasCtx!,
                     1,
-                    'red',
+                    'black',
                     'green'
                 );
                 sq.draw();
@@ -103,25 +103,30 @@ canvas.addEventListener('click', (event: MouseEvent) => {
 
 const SECOND = 1_000;
 
-setInterval(() => {
-    clearCanvas();
-    drawMatrixState(m);
-    grid.draw();
-    let matrixCopy = structuredClone(m);
-    for (let i = 0; i < m.length; i++) {
-        for (let j = 0; j < m[0].length; j++) {
-            if (i < m.length - 1) {
-                matrixCopy[i + 1][j] = m[i][j];
-            }
-            if (i > 0) {
-                matrixCopy[i][j] = m[i - 1][j];
-            }
-            if (i == 0) {
-                matrixCopy[i][j] = 0;
+function moveBlocksDown(matrix: Matrix): Matrix {
+    const numRows = matrix.length;
+    const numCols = matrix[0].length;
+
+    // Iterate through each column from bottom to top
+    for (let col = 0; col < numCols; col++) {
+        for (let row = numRows - 1; row >= 0; row--) {
+            // If the current cell contains a 1
+            if (matrix[row][col] === 1) {
+                // Move the 1 to the next row only if the cell below is empty
+                if (row < numRows - 1 && matrix[row + 1][col] === 0) {
+                    matrix[row + 1][col] = 1;
+                    matrix[row][col] = 0;
+                }
             }
         }
     }
 
-    m = matrixCopy;
-    console.log(m);
-}, 0.09* SECOND);
+    return matrix;
+}
+
+setInterval(() => {
+    clearCanvas();
+    drawMatrixState(m);
+    grid.draw();
+    moveBlocksDown(m)
+}, 0.03* SECOND);
