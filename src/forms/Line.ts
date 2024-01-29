@@ -11,8 +11,8 @@ export function NewLine(
     return new Line(
         new Vector(start.x, start.y),
         new Vector(end.x, end.y),
-        lineWidth,
         canvasCtx!,
+        lineWidth,
         color
     );
 }
@@ -20,20 +20,20 @@ export function NewLine(
 export class Line extends Form {
     public start: Vector;
     public end: Vector;
-    public width: number;
+    public lineWidth: number;
     public ctx: CanvasRenderingContext2D;
     public lineColor: string;
     constructor(
         start: Vector,
         end: Vector,
-        width: number = 5,
         canvasCtx: CanvasRenderingContext2D,
+        width: number = 5,
         color: string
     ) {
         super();
         this.start = start;
         this.end = end;
-        this.width = width;
+        this.lineWidth = width;
         this.ctx = canvasCtx;
         this.lineColor = color;
     }
@@ -42,7 +42,7 @@ export class Line extends Form {
         this.ctx.beginPath();
         this.ctx.moveTo(this.start.x, this.start.y);
         this.ctx.lineTo(this.end.x, this.end.y);
-        this.ctx.lineWidth = this.width;
+        this.ctx.lineWidth = this.lineWidth;
         this.ctx.strokeStyle = this.lineColor;
         this.ctx.stroke();
     }

@@ -21,7 +21,7 @@ class Circle extends Form {
     public position: Vector;
     public radius: number;
     public ctx: CanvasRenderingContext2D;
-    public width: number;
+    public lineWidth: number;
     public lineColor: string;
     constructor(
         position: Vector,
@@ -31,7 +31,7 @@ class Circle extends Form {
         color: string
     ) {
         super();
-        this.width = width;
+        this.lineWidth = width;
         this.lineColor = color;
         this.position = position;
         this.radius = radius;
@@ -46,7 +46,7 @@ class Circle extends Form {
             0,
             2 * Math.PI
         );
-        this.ctx.lineWidth = this.width;
+        this.ctx.lineWidth = this.lineWidth;
         this.ctx.strokeStyle = this.lineColor;
         this.ctx.stroke();
     }
