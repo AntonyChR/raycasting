@@ -10,9 +10,6 @@ export default class Vector {
         return new Vector(this.x + other.x, this.y + other.y);
     }
 
-    minus(other: Vector): Vector {
-        return new Vector(this.x - other.x, this.y - other.y);
-    }
 
     scalarProduct(scalar: number): Vector {
         return new Vector(this.x * scalar, this.y * scalar);
@@ -20,13 +17,6 @@ export default class Vector {
 
     dot(other: Vector): number {
         return this.x * other.x + this.y * other.y;
-    }
-
-    crossProduct(other: Vector): Vector {
-        return new Vector(
-            this.x * other.y - this.y * other.x,
-            this.x * other.y + this.y * other.x
-        );
     }
 
     norm(other?: Vector): number {
@@ -37,8 +27,13 @@ export default class Vector {
         return Math.sqrt(this.x ** 2 + this.y ** 2);
     }
 
+    minus(other: Vector): Vector {
+        return new Vector(this.x - other.x, this.y - other.y);
+    }
+
     projectedOnto(other: Vector): Vector {
         let sc = this.dot(other) / other.dot(other);
         return other.scalarProduct(sc);
     }
+
 }
