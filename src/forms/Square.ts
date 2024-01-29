@@ -50,7 +50,7 @@ class Square extends Form {
 
     draw(): void {
         this.ctx.beginPath();
-        this.ctx.rect(this.start.x, this.start.y, this.width, this.height);
+        this.ctx.rect(this.start.x, this.start.y, this.lineWidth, this.height);
         this.ctx.lineWidth = this.lineWidth;
         this.ctx.strokeStyle = this.lineColor;
         if(this.fillColor){
