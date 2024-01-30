@@ -10,7 +10,6 @@ export default class Vector {
         return new Vector(this.x + other.x, this.y + other.y);
     }
 
-
     scalarProduct(scalar: number): Vector {
         return new Vector(this.x * scalar, this.y * scalar);
     }
@@ -36,4 +35,7 @@ export default class Vector {
         return other.scalarProduct(sc);
     }
 
+    static fromAngle(norm: number = 1, angle: number) {
+        return new Vector(norm * Math.cos(angle), norm * Math.sin(angle));
+    }
 }

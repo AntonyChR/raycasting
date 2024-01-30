@@ -1,5 +1,5 @@
-import Vector from "../vector/vector";
-import Form from "./Form";
+import Vector from '../vector/vector';
+import Form from './Form';
 
 export function NewCircle(
     position: Coordinates | Vector,
@@ -9,7 +9,9 @@ export function NewCircle(
     color: string = '#000000'
 ): Circle {
     return new Circle(
-        new Vector(position.x, position.y),
+        position instanceof Vector
+            ? position
+            : new Vector(position.x, position.y),
         radius,
         canvasCtx,
         width,
@@ -17,7 +19,7 @@ export function NewCircle(
     );
 }
 
-class Circle extends Form {
+export class Circle extends Form {
     public position: Vector;
     public radius: number;
     public ctx: CanvasRenderingContext2D;
