@@ -4,20 +4,19 @@ import { Particle } from './raycast/Particle';
 
 import './style.css';
 
-
 const CONFIG = {
-    canvas:{
-        width:window.innerWidth,
+    canvas: {
+        width: window.innerWidth,
         height: window.innerHeight,
-        bgColor: 'black'
+        bgColor: 'black',
     },
-    scene2d:{
-        width: window.innerWidth/2,
-        height: window.innerHeight
+    scene2d: {
+        width: window.innerWidth / 2,
+        height: window.innerHeight,
     },
     nWalls: 5,
-}
-const canvas = createCanvas(CONFIG.canvas.width,CONFIG.canvas.height);
+};
+const canvas = createCanvas(CONFIG.canvas.width, CONFIG.canvas.height);
 
 const canvasCtx = canvas.getContext('2d')!;
 
@@ -36,9 +35,24 @@ for (let i = 0; i < CONFIG.nWalls; i++) {
 walls.push(new Boundary(0, 0, CONFIG.scene2d.width, 0, canvasCtx)); //top
 walls.push(new Boundary(0, 0, 0, CONFIG.scene2d.height, canvasCtx)); //left
 
-walls.push(new Boundary(CONFIG.scene2d.width,CONFIG.scene2d.height,CONFIG.scene2d.width,0, canvasCtx));
-walls.push(new Boundary(CONFIG.scene2d.width,CONFIG.scene2d.height,0,CONFIG.scene2d.height, canvasCtx));
-
+walls.push(
+    new Boundary(
+        CONFIG.scene2d.width,
+        CONFIG.scene2d.height,
+        CONFIG.scene2d.width,
+        0,
+        canvasCtx
+    )
+);
+walls.push(
+    new Boundary(
+        CONFIG.scene2d.width,
+        CONFIG.scene2d.height,
+        0,
+        CONFIG.scene2d.height,
+        canvasCtx
+    )
+);
 
 const particle = new Particle(canvasCtx);
 
@@ -50,6 +64,8 @@ document.addEventListener('mousemove', (event: MouseEvent) => {
 const SECOND = 1_000;
 
 setInterval(() => {
+
+    //reset canvas
     canvasCtx.fillStyle = 'black';
     canvasCtx.fillRect(0, 0, CONFIG.canvas.width, CONFIG.canvas.width);
 
@@ -57,4 +73,4 @@ setInterval(() => {
     walls.forEach((w) => {
         w.draw();
     });
-}, 0.07* SECOND);
+}, 0.07 * SECOND);
