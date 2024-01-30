@@ -14,7 +14,7 @@ export class Particle {
         this.canvasCtx = canvasCtx;
         this.pos = new Vector(250, 250);
         this.rays = [];
-        for (let angle = 0; angle < 360; angle += 10) {
+        for (let angle = 0; angle < 360; angle += 1) {
             this.rays.push(new Ray(this.pos, toRadians(angle)));
         }
         this.circle = NewCircle(this.pos, 10, canvasCtx);
@@ -25,12 +25,23 @@ export class Particle {
         this.pos.y = y;
     }
 
-    look(w: Boundary) {
-        for (let i = 0; i < this.rays.length; i++) {
-            const r = this.rays[i];
-            let pt = r.cast(w);
-            if (pt) {
-                NewLine(this.pos,pt,this.canvasCtx,1,'red').draw()
+    look(walls: Boundary[]) {
+        for (let ray of this.rays) {
+            let closestWall = null;
+            let record: number = Infinity;
+            for (let wall of walls) {
+                const pt = ray.cast(wall);
+                if (pt) {
+                    const d = this.pos.norm(pt);
+                    if (d < record) {
+                        record = d;
+                        closestWall = pt;
+                    }
+                }
+            }
+            if(closestWall){
+                NewLine(this.pos, closestWall, this.canvasCtx, 1, 'white').draw();
+
             }
         }
     }
@@ -39,4 +50,3 @@ export class Particle {
         this.circle.draw();
     }
 }
-
