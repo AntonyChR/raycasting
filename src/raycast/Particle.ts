@@ -1,5 +1,4 @@
 import { toRadians } from '../Math/lib';
-import { Circle, NewCircle } from '../forms/Circle';
 import { NewLine } from '../forms/Line';
 import Vector from '../vector/vector';
 import { Boundary } from './Boundary';
@@ -8,7 +7,6 @@ import { Ray } from './Ray';
 export class Particle {
     public pos: Vector;
     public rays: Ray[];
-    public circle: Circle;
     public canvasCtx: CanvasRenderingContext2D;
     constructor(canvasCtx: CanvasRenderingContext2D) {
         this.canvasCtx = canvasCtx;
@@ -17,7 +15,6 @@ export class Particle {
         for (let angle = 0; angle < 360; angle += 1) {
             this.rays.push(new Ray(this.pos, toRadians(angle)));
         }
-        this.circle = NewCircle(this.pos, 10, canvasCtx);
     }
 
     update(x: number, y: number) {
@@ -46,7 +43,4 @@ export class Particle {
         }
     }
 
-    draw() {
-        this.circle.draw();
-    }
 }

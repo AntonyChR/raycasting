@@ -6,33 +6,33 @@ export default class Vector {
         this.y = y;
     }
 
-    add(other: Vector): Vector {
-        return new Vector(this.x + other.x, this.y + other.y);
+    add(v: Vector): Vector {
+        return new Vector(this.x + v.x, this.y + v.y);
     }
 
-    scalarProduct(scalar: number): Vector {
+    scalarMultiplication(scalar: number): Vector {
         return new Vector(this.x * scalar, this.y * scalar);
     }
 
-    dot(other: Vector): number {
-        return this.x * other.x + this.y * other.y;
+    dot(v: Vector): number {
+        return this.x * v.x + this.y * v.y;
     }
 
-    norm(other?: Vector): number {
-        if (other) {
-            let t = this.add(other.scalarProduct(-1)); // norm(this - other)
+    norm(v?: Vector): number {
+        if (v) {
+            let t = this.add(v.scalarMultiplication(-1));
             return Math.sqrt(t.x ** 2 + t.y ** 2);
         }
         return Math.sqrt(this.x ** 2 + this.y ** 2);
     }
 
-    minus(other: Vector): Vector {
-        return new Vector(this.x - other.x, this.y - other.y);
+    minus(v: Vector): Vector {
+        return new Vector(this.x - v.x, this.y - v.y);
     }
 
-    projectedOnto(other: Vector): Vector {
-        let sc = this.dot(other) / other.dot(other);
-        return other.scalarProduct(sc);
+    projectedOnto(v: Vector): Vector {
+        let sc = this.dot(v) / v.dot(v);
+        return v.scalarMultiplication(sc);
     }
 
     static fromAngle(norm: number = 1, angle: number) {

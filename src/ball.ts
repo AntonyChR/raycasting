@@ -63,7 +63,7 @@ const interval = setInterval(() => {
         let normal = new Vector(-center_to_ball.y, center_to_ball.x);
 
         let tangencial = velocity.projectedOnto(normal);
-        let radial = velocity.projectedOnto(center_to_ball).scalarProduct(-1);
+        let radial = velocity.projectedOnto(center_to_ball).scalarMultiplication(-1);
 
         velocity = tangencial.add(radial);
 

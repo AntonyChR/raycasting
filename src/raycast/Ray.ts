@@ -14,7 +14,7 @@ export class Ray {
         this.dir.x = x - this.pos.x;
         this.dir.y = y - this.pos.y;
 
-        this.dir = this.dir.scalarProduct(1 / this.dir.norm()); // get unit vector
+        this.dir = this.dir.scalarMultiplication(1 / this.dir.norm()); // get unit vector
     }
 
     cast(wall: Boundary): undefined | Vector {
