@@ -13,7 +13,7 @@ const CONFIG = {
     scene2d: {
         width: window.innerWidth / 2,
         height: window.innerHeight,
-        wallsColor: 'red'
+        wallsColor: 'red',
     },
     nWalls: 5,
 };
@@ -22,19 +22,21 @@ const canvas = createCanvas(CONFIG.canvas.width, CONFIG.canvas.height);
 
 const canvasCtx = canvas.getContext('2d')!;
 
-
-
 let walls: Boundary[] = [];
 
-// create random walls
-for (let i = 0; i < CONFIG.nWalls; i++) {
+function generateRandomWall(): Boundary {
     let x1 = Math.random() * CONFIG.scene2d.width;
     let y1 = Math.random() * CONFIG.scene2d.height;
 
     let x2 = Math.random() * CONFIG.scene2d.width;
     let y2 = Math.random() * CONFIG.scene2d.height;
 
-    walls.push(new Boundary(x1, y1, x2, y2, canvasCtx, CONFIG.scene2d.wallsColor));
+    return new Boundary(x1, y1, x2, y2, canvasCtx, CONFIG.scene2d.wallsColor);
+}
+
+// create random walls
+for (let i = 0; i < CONFIG.nWalls; i++) {
+    walls.push(generateRandomWall());
 }
 
 // create 2d scene boundaries
@@ -72,16 +74,20 @@ document.addEventListener('mousemove', (event: MouseEvent) => {
     particle.update(event.clientX - rect.left, event.clientY - rect.top);
 });
 
+// add random wall
+document.querySelector('.add-wall')!.addEventListener('click', () => {
+    walls.push(generateRandomWall())
+});
+
 // main loop
 const SECOND = 1_000;
 setInterval(() => {
-
     //reset canvas
     canvasCtx.fillStyle = CONFIG.canvas.bgColor;
     canvasCtx.fillRect(0, 0, CONFIG.canvas.width, CONFIG.canvas.height);
 
     particle.look(walls);
-    
+
     walls.forEach((w) => {
         w.draw();
     });
