@@ -6,57 +6,44 @@ export const newSquare = (
     width: number,
     height: number,
     ctx: CanvasRenderingContext2D,
-    lineWidth: number = 1,
-    lineColor: string = '#000000',
-    fillColor: string|null = null
+    fillColor: string = 'black',
 ) => {
-    return new Square(
+    return new SolidSquare(
         new Vector(start.x, start.y),
         width,
         height,
-        lineWidth,
         ctx,
-        lineColor,
-        fillColor
+        fillColor,
     );
 };
 
-class Square extends Form {
-    public start: Vector;
+
+class SolidSquare {
+    public start: Vector; // Vector contiene coordenadas y se accede: Vector.x Vector.y
     public width: number;
     public height: number;
     public ctx: CanvasRenderingContext2D;
-    public lineWidth: number;
-    public lineColor: string;
-    public fillColor: string| null;
+    public fillColor: string;
     constructor(
         start: Vector,
         width: number = 10,
         height: number = 10,
-        lineWidth: number = 1,
         canvasCtx: CanvasRenderingContext2D,
-        lineColor: string,
-        fillColor: string |null
+        fillColor: string  = 'black',
     ) {
-        super();
         this.start = start;
         this.width = width;
         this.height = height;
-        this.lineWidth = lineWidth;
         this.ctx = canvasCtx;
-        this.lineColor = lineColor;
         this.fillColor = fillColor;
     }
 
     draw(): void {
         this.ctx.beginPath();
-        this.ctx.rect(this.start.x, this.start.y, this.lineWidth, this.height);
-        this.ctx.lineWidth = this.lineWidth;
-        this.ctx.strokeStyle = this.lineColor;
-        if(this.fillColor){
-            this.ctx.fillStyle = this.fillColor;
-        }
-        this.ctx.stroke();
-        this.ctx.fill()
+        this.ctx.fillStyle = this.fillColor;
+        this.ctx.fillRect(this.start.x, this.start.y, this.width, this.height);
+        this.ctx.closePath();
     }
 }
+
+
