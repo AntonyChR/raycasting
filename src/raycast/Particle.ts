@@ -12,7 +12,7 @@ export class Particle {
         this.canvasCtx = canvasCtx;
         this.pos = new Vector(250, 250);
         this.rays = [];
-        for (let angle = 0; angle < 360; angle += 1) {
+        for (let angle = 0; angle < 50; angle += 1) {
             this.rays.push(new Ray(this.pos, toRadians(angle)));
         }
     }
@@ -22,8 +22,10 @@ export class Particle {
         this.pos.y = y;
     }
 
-    look(walls: Boundary[]) {
-        for (let ray of this.rays) {
+    look(walls: Boundary[]): number[] {
+        const scene = []
+        for (let i = 0; i< this.rays.length; i++) {
+            const ray = this.rays[i]
             let closestWall = null;
             let record: number = Infinity;
             for (let wall of walls) {
@@ -38,9 +40,11 @@ export class Particle {
             }
             if(closestWall){
                 NewLine(this.pos, closestWall, this.canvasCtx, 1, 'white').draw();
-
             }
+            scene[i] = record;
+            
         }
+        return scene
     }
 
 }

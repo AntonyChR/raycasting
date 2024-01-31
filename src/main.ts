@@ -1,4 +1,5 @@
 import { createCanvas } from './canvas/canvas';
+import { newSquare } from './forms/Square';
 import { Boundary } from './raycast/Boundary';
 import { Particle } from './raycast/Particle';
 
@@ -76,7 +77,7 @@ document.addEventListener('mousemove', (event: MouseEvent) => {
 
 // add random wall
 document.querySelector('.add-wall')!.addEventListener('click', () => {
-    walls.push(generateRandomWall())
+    walls.push(generateRandomWall());
 });
 
 // main loop
@@ -86,7 +87,31 @@ setInterval(() => {
     canvasCtx.fillStyle = CONFIG.canvas.bgColor;
     canvasCtx.fillRect(0, 0, CONFIG.canvas.width, CONFIG.canvas.height);
 
-    particle.look(walls);
+    // scene contains distance to visible walls in the field of view
+
+    const scene: number[] = particle.look(walls);
+
+    const w = CONFIG.canvas.width / 2 / scene.length;
+
+    newSquare(
+        { x: CONFIG.canvas.width / 2, y: 0 },
+        CONFIG.canvas.width / 2,
+        CONFIG.canvas.height,
+        canvasCtx,
+        'white'
+    ).draw();
+    for (let i = 0; i < scene.length; i++) {
+
+        // the distance to the wall is between 0 and 255, we need values between 0 and 1 for alpha
+        const color = `rgba(0,0,0,${scene[i]/200})`; // normalization dividing by 255
+        newSquare(
+            { x: CONFIG.canvas.width / 2 + i * w, y: 0 },
+            w,
+            CONFIG.canvas.height,
+            canvasCtx,
+            color,
+        ).draw();
+    }
 
     walls.forEach((w) => {
         w.draw();
