@@ -10,6 +10,10 @@ export class Ray {
         this.dir = Vector.fromAngle(1, angle);
     }
 
+    setAngle(angle:number){
+        this.dir = Vector.fromAngle(1,angle)
+    }
+
     lookAt(x: number, y: number) {
         this.dir.x = x - this.pos.x;
         this.dir.y = y - this.pos.y;

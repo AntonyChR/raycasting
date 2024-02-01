@@ -81,10 +81,23 @@ document.querySelector('.add-wall')!.addEventListener('click', () => {
     walls.push(generateRandomWall());
 });
 
+document.addEventListener('keypress', (event: KeyboardEvent) => {
+    switch (event.key) {
+        case 'a':
+            particle.rotate(0.1);
+            break;
+        case 's':
+            particle.rotate(-0.1);
+            break;
+    }
+});
+
 // main loop
 const SECOND = 1_000;
 
-const diagonal = Math.sqrt(CONFIG.canvas.width**2+CONFIG.canvas.height**2 )
+const diagonal = Math.sqrt(
+    CONFIG.canvas.width ** 2 + CONFIG.canvas.height ** 2
+);
 setInterval(() => {
     //reset canvas
     canvas2dCtx.fillStyle = CONFIG.canvas.bgColor;
@@ -104,16 +117,16 @@ setInterval(() => {
     ).draw();
 
     for (let i = 0; i < scene.length; i++) {
-
         //change the third parameter to adjust the grayscale
-        const grey =255 - normalize(scene[i], 0, diagonal, 0, 255); //invert gray color
+        const grey = 255 - normalize(scene[i], 0, diagonal, 0, 255); //invert gray color
 
         canvas3dCtx.fillStyle = `rgb(${grey} ${grey} ${grey})`;
 
-        const h = CONFIG.canvas.height - normalize(scene[i],0,diagonal,0,CONFIG.canvas.height) // invert size
-        const y = (CONFIG.canvas.height - h)/2 //center vertically
+        const h =
+            CONFIG.canvas.height -
+            normalize(scene[i], 0, diagonal, 0, CONFIG.canvas.height); // invert size
+        const y = (CONFIG.canvas.height - h) / 2; //center vertically
         canvas3dCtx.fillRect(i * w - 1, y, w + 1, h);
-
     }
 
     walls.forEach((w) => {

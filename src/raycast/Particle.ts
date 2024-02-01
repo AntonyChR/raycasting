@@ -8,12 +8,22 @@ export class Particle {
     public pos: Vector;
     public rays: Ray[];
     public canvasCtx: CanvasRenderingContext2D;
+    public heading: number
     constructor(canvasCtx: CanvasRenderingContext2D) {
         this.canvasCtx = canvasCtx;
         this.pos = new Vector(250, 250);
         this.rays = [];
-        for (let angle = 0; angle < 90; angle += 1) {
+        this.heading = 0;
+        for (let angle = 0; angle < 45; angle += 1) {
             this.rays.push(new Ray(this.pos, toRadians(angle)));
+        }
+    }
+
+    rotate(angle: number){
+        this.heading += angle
+
+        for (let i = 0; i < this.rays.length; i += 1) {
+            this.rays[i].setAngle(toRadians(i) + this.heading)
         }
     }
 
