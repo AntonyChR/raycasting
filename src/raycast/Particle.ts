@@ -12,7 +12,7 @@ export class Particle {
         this.canvasCtx = canvasCtx;
         this.pos = new Vector(250, 250);
         this.rays = [];
-        for (let angle = 0; angle < 50; angle += 1) {
+        for (let angle = 0; angle < 90; angle += 1) {
             this.rays.push(new Ray(this.pos, toRadians(angle)));
         }
     }

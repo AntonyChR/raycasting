@@ -100,17 +100,19 @@ setInterval(() => {
         CONFIG.canvas.width,
         CONFIG.canvas.height,
         canvas3dCtx,
-        'white'
+        'black'
     ).draw();
 
     for (let i = 0; i < scene.length; i++) {
 
         //change the third parameter to adjust the grayscale
-
-        const grey = 255 - normalize(scene[i], 0, diagonal/2, 0, 255);
+        const grey =255 - normalize(scene[i], 0, diagonal, 0, 255); //invert gray color
 
         canvas3dCtx.fillStyle = `rgb(${grey} ${grey} ${grey})`;
-        canvas3dCtx.fillRect(i * w - 1, 0, w + 1, CONFIG.canvas.height);
+
+        const h = CONFIG.canvas.height - normalize(scene[i],0,diagonal,0,CONFIG.canvas.height) // invert size
+        const y = (CONFIG.canvas.height - h)/2 //center vertically
+        canvas3dCtx.fillRect(i * w - 1, y, w + 1, h);
 
     }
 
