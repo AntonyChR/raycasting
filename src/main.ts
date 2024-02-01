@@ -1,3 +1,4 @@
+import { normalize } from './Math/lib';
 import { createCanvas } from './canvas/canvas';
 import { newSquare } from './forms/Square';
 import { Boundary } from './raycast/Boundary';
@@ -7,32 +8,32 @@ import './style.css';
 
 const CONFIG = {
     canvas: {
-        width: window.innerWidth,
+        width: window.innerWidth / 2,
         height: window.innerHeight,
         bgColor: 'black',
     },
     scene2d: {
-        width: window.innerWidth / 2,
-        height: window.innerHeight,
         wallsColor: 'red',
     },
     nWalls: 5,
 };
 
-const canvas = createCanvas(CONFIG.canvas.width, CONFIG.canvas.height);
+const canvas2d = createCanvas(CONFIG.canvas.width, CONFIG.canvas.height);
+const canvas3d = createCanvas(CONFIG.canvas.width, CONFIG.canvas.height);
 
-const canvasCtx = canvas.getContext('2d')!;
+const canvas2dCtx = canvas2d.getContext('2d')!;
+const canvas3dCtx = canvas3d.getContext('2d')!;
 
 let walls: Boundary[] = [];
 
 function generateRandomWall(): Boundary {
-    let x1 = Math.random() * CONFIG.scene2d.width;
-    let y1 = Math.random() * CONFIG.scene2d.height;
+    let x1 = Math.random() * CONFIG.canvas.width;
+    let y1 = Math.random() * CONFIG.canvas.height;
 
-    let x2 = Math.random() * CONFIG.scene2d.width;
-    let y2 = Math.random() * CONFIG.scene2d.height;
+    let x2 = Math.random() * CONFIG.canvas.width;
+    let y2 = Math.random() * CONFIG.canvas.height;
 
-    return new Boundary(x1, y1, x2, y2, canvasCtx, CONFIG.scene2d.wallsColor);
+    return new Boundary(x1, y1, x2, y2, canvas2dCtx, CONFIG.scene2d.wallsColor);
 }
 
 // create random walls
@@ -42,36 +43,36 @@ for (let i = 0; i < CONFIG.nWalls; i++) {
 
 // create 2d scene boundaries
 
-walls.push(new Boundary(0, 0, CONFIG.scene2d.width, 0, canvasCtx)); //top
-walls.push(new Boundary(0, 0, 0, CONFIG.scene2d.height, canvasCtx)); //left
+walls.push(new Boundary(0, 0, CONFIG.canvas.width, 0, canvas2dCtx)); //top
+walls.push(new Boundary(0, 0, 0, CONFIG.canvas.height, canvas2dCtx)); //left
 
 //right
 walls.push(
     new Boundary(
-        CONFIG.scene2d.width,
-        CONFIG.scene2d.height,
-        CONFIG.scene2d.width,
+        CONFIG.canvas.width,
+        CONFIG.canvas.height,
+        CONFIG.canvas.width,
         0,
-        canvasCtx
+        canvas2dCtx
     )
 );
 
 //bottom
 walls.push(
     new Boundary(
-        CONFIG.scene2d.width,
-        CONFIG.scene2d.height,
+        CONFIG.canvas.width,
+        CONFIG.canvas.height,
         0,
-        CONFIG.scene2d.height,
-        canvasCtx
+        CONFIG.canvas.height,
+        canvas2dCtx
     )
 );
 
-const particle = new Particle(canvasCtx);
+const particle = new Particle(canvas2dCtx);
 
 // update particle position
 document.addEventListener('mousemove', (event: MouseEvent) => {
-    const rect = canvas.getBoundingClientRect();
+    const rect = canvas2d.getBoundingClientRect();
     particle.update(event.clientX - rect.left, event.clientY - rect.top);
 });
 
@@ -82,35 +83,35 @@ document.querySelector('.add-wall')!.addEventListener('click', () => {
 
 // main loop
 const SECOND = 1_000;
+
+const diagonal = Math.sqrt(CONFIG.canvas.width**2+CONFIG.canvas.height**2 )
 setInterval(() => {
     //reset canvas
-    canvasCtx.fillStyle = CONFIG.canvas.bgColor;
-    canvasCtx.fillRect(0, 0, CONFIG.canvas.width, CONFIG.canvas.height);
+    canvas2dCtx.fillStyle = CONFIG.canvas.bgColor;
+    canvas2dCtx.fillRect(0, 0, CONFIG.canvas.width, CONFIG.canvas.height);
 
     // scene contains distance to visible walls in the field of view
 
     const scene: number[] = particle.look(walls);
-
-    const w = CONFIG.canvas.width / 2 / scene.length;
+    const w = CONFIG.canvas.width / scene.length;
 
     newSquare(
-        { x: CONFIG.canvas.width / 2, y: 0 },
-        CONFIG.canvas.width / 2,
+        { x: 0, y: 0 },
+        CONFIG.canvas.width,
         CONFIG.canvas.height,
-        canvasCtx,
+        canvas3dCtx,
         'white'
     ).draw();
+
     for (let i = 0; i < scene.length; i++) {
 
-        // the distance to the wall is between 0 and 255, we need values between 0 and 1 for alpha
-        const color = `rgba(0,0,0,${scene[i]/200})`; // normalization dividing by 255
-        newSquare(
-            { x: CONFIG.canvas.width / 2 + i * w, y: 0 },
-            w,
-            CONFIG.canvas.height,
-            canvasCtx,
-            color,
-        ).draw();
+        //change the third parameter to adjust the grayscale
+
+        const grey = 255 - normalize(scene[i], 0, diagonal/2, 0, 255);
+
+        canvas3dCtx.fillStyle = `rgb(${grey} ${grey} ${grey})`;
+        canvas3dCtx.fillRect(i * w - 1, 0, w + 1, CONFIG.canvas.height);
+
     }
 
     walls.forEach((w) => {
