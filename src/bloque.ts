@@ -76,9 +76,6 @@ function drawMatrixState(m: Matrix) {
                     20,
                     20,
                     canvasCtx!,
-                    1,
-                    'black',
-                    'green'
                 );
                 sq.draw();
             }

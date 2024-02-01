@@ -1,5 +1,4 @@
 import Vector from '../vector/vector';
-import Form from './Form';
 
 export const newSquare = (
     start: Coordinates | Vector,
