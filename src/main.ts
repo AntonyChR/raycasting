@@ -118,7 +118,7 @@ setInterval(() => {
 
     for (let i = 0; i < scene.length; i++) {
         //change the third parameter to adjust the grayscale
-        const grey = 255 - normalize(scene[i], 0, diagonal, 0, 255); //invert gray color
+        const grey = 255 - normalize(scene[i], 0, CONFIG.canvas.width/2, 0, 255); //invert gray color
 
         canvas3dCtx.fillStyle = `rgb(${grey} ${grey} ${grey})`;
 
