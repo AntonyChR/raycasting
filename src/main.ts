@@ -2,6 +2,7 @@ import { normalize } from './Math/lib';
 import { createCanvas } from './canvas/canvas';
 import { newSquare } from './forms/Square';
 import { Boundary } from './raycast/Boundary';
+import { Box } from './raycast/Box';
 import { Particle } from './raycast/Particle';
 
 import './style.css';
@@ -36,6 +37,8 @@ function generateRandomWall(): Boundary {
     return new Boundary(x1, y1, x2, y2, canvas2dCtx, CONFIG.scene2d.wallsColor);
 }
 
+const box = new Box(50,50,100,200,canvas2dCtx)
+walls.push(...box.getWalls())
 // create random walls
 for (let i = 0; i < CONFIG.nWalls; i++) {
     walls.push(generateRandomWall());
@@ -45,6 +48,7 @@ for (let i = 0; i < CONFIG.nWalls; i++) {
 
 walls.push(new Boundary(0, 0, CONFIG.canvas.width, 0, canvas2dCtx)); //top
 walls.push(new Boundary(0, 0, 0, CONFIG.canvas.height, canvas2dCtx)); //left
+
 
 //right
 walls.push(
@@ -118,7 +122,7 @@ setInterval(() => {
 
     for (let i = 0; i < scene.length; i++) {
         //change the third parameter to adjust the grayscale
-        const grey = 255 - normalize(scene[i], 0, CONFIG.canvas.width/2, 0, 255); //invert gray color
+        const grey = 255 - normalize(scene[i], 0, diagonal/2, 0, 255); //invert gray color
 
         canvas3dCtx.fillStyle = `rgb(${grey} ${grey} ${grey})`;
 
@@ -132,4 +136,5 @@ setInterval(() => {
     walls.forEach((w) => {
         w.draw();
     });
+    box.draw()
 }, 0.07 * SECOND);
