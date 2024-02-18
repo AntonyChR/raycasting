@@ -2,7 +2,6 @@ import { normalize } from './Math/lib';
 import { createCanvas } from './canvas/canvas';
 import { newSquare } from './forms/Square';
 import { Boundary } from './raycast/Boundary';
-import { Box } from './raycast/Box';
 import { Particle } from './raycast/Particle';
 
 import './style.css';
@@ -37,8 +36,6 @@ function generateRandomWall(): Boundary {
     return new Boundary(x1, y1, x2, y2, canvas2dCtx, CONFIG.scene2d.wallsColor);
 }
 
-const box = new Box(50,50,100,200,canvas2dCtx)
-walls.push(...box.getWalls())
 // create random walls
 for (let i = 0; i < CONFIG.nWalls; i++) {
     walls.push(generateRandomWall());
@@ -136,5 +133,4 @@ setInterval(() => {
     walls.forEach((w) => {
         w.draw();
     });
-    box.draw()
 }, 0.07 * SECOND);
