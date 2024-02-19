@@ -14,7 +14,7 @@ export class Particle {
         this.pos = new Vector(250, 250);
         this.rays = [];
         this.heading = 0;
-        for (let angle = 0; angle < 30; angle += 1) {
+        for (let angle = 0; angle < 20; angle += 0.5) {
             this.rays.push(new Ray(this.pos, toRadians(angle)));
         }
     }
