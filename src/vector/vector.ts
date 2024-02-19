@@ -35,6 +35,10 @@ export default class Vector {
         return v.scalarMultiplication(sc);
     }
 
+    getAngle(): number {
+        return Math.atan2(this.y, this.x);
+    }
+
     static fromAngle(norm: number = 1, angle: number) {
         return new Vector(norm * Math.cos(angle), norm * Math.sin(angle));
     }

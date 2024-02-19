@@ -82,13 +82,14 @@ document.querySelector('.add-wall')!.addEventListener('click', () => {
     walls.push(generateRandomWall());
 });
 
+const ROTATION_DELTA = 0.05
 document.addEventListener('keypress', (event: KeyboardEvent) => {
     switch (event.key) {
         case 'a':
-            particle.rotate(0.1);
+            particle.rotate(ROTATION_DELTA);
             break;
         case 's':
-            particle.rotate(-0.1);
+            particle.rotate(-ROTATION_DELTA);
             break;
     }
 });

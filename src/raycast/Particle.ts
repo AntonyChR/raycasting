@@ -14,16 +14,16 @@ export class Particle {
         this.pos = new Vector(250, 250);
         this.rays = [];
         this.heading = 0;
-        for (let angle = 0; angle < 20; angle += 0.5) {
+        for (let angle = 0; angle < 20; angle += 0.2) {
             this.rays.push(new Ray(this.pos, toRadians(angle)));
         }
     }
 
     rotate(angle: number){
-        this.heading += angle
 
         for (let i = 0; i < this.rays.length; i += 1) {
-            this.rays[i].setAngle(toRadians(i) + this.heading)
+            const theta = this.rays[i].dir.getAngle()
+            this.rays[i].setAngle(theta + angle)
         }
     }
 
