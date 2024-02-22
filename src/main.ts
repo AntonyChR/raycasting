@@ -94,6 +94,15 @@ document.addEventListener('keypress', (event: KeyboardEvent) => {
     }
 });
 
+document.addEventListener('wheel',(event: WheelEvent)=>{
+    if(event.deltaY>0){
+        particle.rotate(ROTATION_DELTA)
+        return;
+    }
+
+    particle.rotate(-ROTATION_DELTA)
+})
+
 // main loop
 const SECOND = 1_000;
 
